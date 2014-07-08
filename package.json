@@ -2,12 +2,11 @@
   "name": "decoration-example",
   "main": "./lib/decoration-example",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "Exercising Atom's Decoration API",
   "repository": "https://github.com/atom/decoration-example",
   "license": "MIT",
   "engines": {
-    "atom": ">0.50.0"
+    "atom": ">0.109.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
