@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable decoration-example': 'decoration-example:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'decoration-example'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'decoration-example:toggle' }
+      ]
+    ]
+  }
+]
