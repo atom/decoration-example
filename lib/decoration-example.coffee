@@ -5,6 +5,7 @@ module.exports =
 
   activate: (state) ->
     @decorationExampleView = new DecorationExampleView(state.decorationExampleViewState)
+    @decorationExampleView.attach()
 
   deactivate: ->
     @decorationExampleView.destroy()
