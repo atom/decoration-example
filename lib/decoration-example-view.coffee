@@ -37,19 +37,30 @@ class DecorationExampleView extends View
 
     atom.workspaceView.on 'pane-container:active-pane-item-changed', => @updateToggleButtonStates()
 
+  ## Decoration API methods
+
   createDecorationFromCurrentSelection: (editor, type) ->
+    # Get the user's selection from the editor
     range = editor.getSelectedBufferRange()
+
+    # create a marker that never invalidates that folows the user's selection range
     marker = editor.markBufferRange(range, invalidate: 'never')
-    editor.decorateMarker(marker, type: type, class: "#{type}-#{@getRandomColor()}")
+
+    # create a decoration that follows the marker. A Decoration object is returned which can be updated
+    decoration = editor.decorateMarker(marker, type: type, class: "#{type}-#{@getRandomColor()}")
+    decoration
 
   updateDecoration: (decoration, newDecorationParams) ->
+    # This allows you to change the class on the decoration
     decoration.update(newDecorationParams)
 
   destroyDecorationMarker: (decoration) ->
+    # Destory the decoration's marker because we will no longer need it.
+    # This will destroy the decoration as well. Destroying the marker is the
+    # recommended way to destory the decorations.
     decoration.marker.destroy()
 
-  destroyDecoration: (decoration) ->
-    decoration.destroy()
+  ## Button handling methods
 
   toggleDecorationForCurrentSelection: (type) ->
     return unless editor = @getEditor()
@@ -90,6 +101,8 @@ class DecorationExampleView extends View
     klass = "#{type}-#{newColor}"
 
     @updateDecoration(decoration, {type, class: klass})
+
+  ## Utility methods
 
   getEditor: ->
     atom.workspace.getActiveEditor()

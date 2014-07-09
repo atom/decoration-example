@@ -1,9 +1,18 @@
 @import "syntax-variables";
 
+// Using the git-diff colors so they are visible on your syntax theme.
 @red-color: @syntax-color-removed;
 @green-color: @syntax-color-added;
 @blue-color: @syntax-color-renamed;
 
+// Very specific way to style the gutter numbers. Doing this so they show up
+// above the `.cursor-line` decorations applied when you select lines.
+//
+// A less specific way to select them would be
+//
+// `.gutter .line-number.gutter-green`{}
+//
+// But will be overridden by the `.cursor-line` decorations.
 .editor .editor-colors .gutter .line-number {
   &.gutter-green {
     color: #fff;
@@ -35,6 +44,7 @@
   }
 }
 
+// Remember: no default styling is provided for highlight decorations.
 .highlight-green .region {
   background-color: @green-color;
 }
