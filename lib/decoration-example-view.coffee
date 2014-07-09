@@ -18,6 +18,7 @@ class DecorationExampleView extends View
           @button outlet: 'highlightColorCycle', class: 'btn', 'Cycle Highlight Color'
 
   colors: ['green', 'blue', 'red']
+  randomizeColors: true
 
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
@@ -39,7 +40,7 @@ class DecorationExampleView extends View
   createDecorationFromCurrentSelection: (editor, type) ->
     range = editor.getSelectedBufferRange()
     marker = editor.markBufferRange(range, invalidate: 'never')
-    editor.decorateMarker(marker, type: type, class: "#{type}-#{@colors[Math.round(Math.random() * 2)]}")
+    editor.decorateMarker(marker, type: type, class: "#{type}-#{@getRandomColor()}")
 
   updateDecoration: (decoration, newDecorationParams) ->
     decoration.update(newDecorationParams)
@@ -99,6 +100,12 @@ class DecorationExampleView extends View
   setCachedDecoration: (editor, type, decoration) ->
     @decorationsByEditorId[editor.id] ?= {}
     @decorationsByEditorId[editor.id][type] = decoration
+
+  getRandomColor: ->
+    if @randomizeColors
+      @colors[Math.round(Math.random() * 2)]
+    else
+      @colors[0]
 
   attach: ->
     atom.workspaceView.prependToBottom(this)

@@ -1,30 +1,120 @@
+path = require 'path'
 {WorkspaceView} = require 'atom'
 DecorationExample = require '../lib/decoration-example'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-#
-# To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-# or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe "DecorationExample", ->
-  activationPromise = null
+  [activationPromise, editor, editorView, decorationExampleView] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
-    activationPromise = atom.packages.activatePackage('decoration-example')
+    atom.project.setPath(path.join(__dirname, 'fixtures'))
 
-  describe "when the decoration-example:toggle event is triggered", ->
-    it "attaches and then detaches the view", ->
-      expect(atom.workspaceView.find('.decoration-example')).not.toExist()
+    waitsForPromise ->
+      atom.workspace.open('sample.js')
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.workspaceView.trigger 'decoration-example:toggle'
+    runs ->
+      atom.workspaceView.attachToDom()
+      editorView = atom.workspaceView.getActiveView()
+      editor = editorView.getEditor()
 
-      waitsForPromise ->
-        activationPromise
+      activationPromise = atom.packages.activatePackage('decoration-example').then ({mainModule}) ->
+        {decorationExampleView} = mainModule
+        decorationExampleView.randomizeColors = false
 
-      runs ->
-        expect(atom.workspaceView.find('.decoration-example')).toExist()
-        atom.workspaceView.trigger 'decoration-example:toggle'
-        expect(atom.workspaceView.find('.decoration-example')).not.toExist()
+    waitsForPromise ->
+      activationPromise
+
+  describe "when the view is loaded", ->
+    it "attaches the view", ->
+      expect(atom.workspaceView.find('.decoration-example')).toExist()
+
+  describe "when the toggle buttons are clicked", ->
+    beforeEach ->
+      editor.setSelectedBufferRange [[5, 8], [6, 10]]
+
+    describe "when the gutter toggle button is clicked", ->
+      it "adds a decoration to the gutter and removes it", ->
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 0
+
+        decorationExampleView.gutterToggle.click()
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 2
+
+        decorationExampleView.gutterToggle.click()
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 0
+
+    describe "when the line toggle button is clicked", ->
+      it "adds a decoration to the lines and removes it", ->
+        expect(editorView.find('.line.line-green')).toHaveLength 0
+
+        decorationExampleView.lineToggle.click()
+        expect(editorView.find('.line.line-green')).toHaveLength 2
+
+        decorationExampleView.lineToggle.click()
+        expect(editorView.find('.line.line-green')).toHaveLength 0
+
+    describe "when the highlight toggle button is clicked", ->
+      it "adds a decoration for the highlight and removes it", ->
+        expect(editorView.find('.highlight-green .region')).toHaveLength 0
+
+        decorationExampleView.highlightToggle.click()
+        expect(editorView.find('.highlight-green .region')).toHaveLength 2
+
+        decorationExampleView.highlightToggle.click()
+        expect(editorView.find('.highlight-green .region')).toHaveLength 0
+
+  describe "when the color cycle buttons are clicked", ->
+    beforeEach ->
+      editor.setSelectedBufferRange [[5, 8], [6, 10]]
+
+    describe "when the gutter color cycle button is clicked", ->
+      it "cycles through the gutter decoration's colors", ->
+        decorationExampleView.gutterToggle.click()
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 2
+
+        decorationExampleView.gutterColorCycle.click()
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 0
+        expect(editorView.find('.gutter .gutter-blue')).toHaveLength 2
+
+        decorationExampleView.gutterColorCycle.click()
+        expect(editorView.find('.gutter .gutter-blue')).toHaveLength 0
+        expect(editorView.find('.gutter .gutter-red')).toHaveLength 2
+
+        decorationExampleView.gutterColorCycle.click()
+        expect(editorView.find('.gutter .gutter-red')).toHaveLength 0
+        expect(editorView.find('.gutter .gutter-green')).toHaveLength 2
+
+    describe "when the line color cycle button is clicked", ->
+      it "cycles through the line decoration's colors", ->
+        decorationExampleView.lineToggle.click()
+        expect(editorView.find('.line.line-green')).toHaveLength 2
+
+        decorationExampleView.lineColorCycle.click()
+        expect(editorView.find('.line.line-green')).toHaveLength 0
+        expect(editorView.find('.line.line-blue')).toHaveLength 2
+
+        decorationExampleView.lineColorCycle.click()
+        expect(editorView.find('.line.line-blue')).toHaveLength 0
+        expect(editorView.find('.line.line-red')).toHaveLength 2
+
+        decorationExampleView.lineColorCycle.click()
+        expect(editorView.find('.line.line-red')).toHaveLength 0
+        expect(editorView.find('.line.line-green')).toHaveLength 2
+
+    describe "when the highlight color cycle button is clicked", ->
+      it "cycles through the highlight decoration's colors", ->
+        decorationExampleView.highlightToggle.click()
+        expect(editorView.find('.highlight-green .region')).toHaveLength 2
+
+        decorationExampleView.highlightColorCycle.click()
+        expect(editorView.find('.highlight-green .region')).toHaveLength 0
+        expect(editorView.find('.highlight-blue .region')).toHaveLength 2
+
+        decorationExampleView.highlightColorCycle.click()
+        expect(editorView.find('.highlight-blue .region')).toHaveLength 0
+        expect(editorView.find('.highlight-red .region')).toHaveLength 2
+
+        decorationExampleView.highlightColorCycle.click()
+        expect(editorView.find('.highlight-red .region')).toHaveLength 0
+        expect(editorView.find('.highlight-green .region')).toHaveLength 2
