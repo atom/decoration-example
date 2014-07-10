@@ -58,7 +58,7 @@ class DecorationExampleView extends View
     # Destory the decoration's marker because we will no longer need it.
     # This will destroy the decoration as well. Destroying the marker is the
     # recommended way to destory the decorations.
-    decoration.marker.destroy()
+    decoration.getMarker().destroy()
 
   ## Button handling methods
 
