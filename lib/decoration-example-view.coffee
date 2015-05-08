@@ -23,16 +23,16 @@ class DecorationExampleView extends View
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
     @toggleButtons =
-      line: @lineToggle
-      gutter: @gutterToggle
-      highlight: @highlightToggle
+      'line': @lineToggle
+      'line-number': @gutterToggle
+      'highlight': @highlightToggle
 
     @lineToggle.on 'click', => @toggleDecorationForCurrentSelection('line')
-    @gutterToggle.on 'click', => @toggleDecorationForCurrentSelection('gutter')
+    @gutterToggle.on 'click', => @toggleDecorationForCurrentSelection('line-number')
     @highlightToggle.on 'click', => @toggleDecorationForCurrentSelection('highlight')
 
     @lineColorCycle.on 'click', => @cycleDecorationColor('line')
-    @gutterColorCycle.on 'click', => @cycleDecorationColor('gutter')
+    @gutterColorCycle.on 'click', => @cycleDecorationColor('line-number')
     @highlightColorCycle.on 'click', => @cycleDecorationColor('highlight')
 
     atom.workspaceView.on 'pane-container:active-pane-item-changed', => @updateToggleButtonStates()
