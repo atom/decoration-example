@@ -1,4 +1,5 @@
 {View} = require 'atom-space-pen-views'
+{CompositeDisposable} = require 'atom'
 
 module.exports =
 class DecorationExampleView extends View
@@ -22,6 +23,8 @@ class DecorationExampleView extends View
 
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
+    disposables = new CompositeDisposable
+    
     @toggleButtons =
       'line': @lineToggle
       'line-number': @gutterToggle
@@ -35,7 +38,7 @@ class DecorationExampleView extends View
     @gutterColorCycle.on 'click', => @cycleDecorationColor('line-number')
     @highlightColorCycle.on 'click', => @cycleDecorationColor('highlight')
 
-    atom.workspaceView.on 'pane-container:active-pane-item-changed', => @updateToggleButtonStates()
+    disposables.add atom.workspace.onDidChangeActivePaneItem => @updateToggleButtonStates()
 
   ## Decoration API methods
 
