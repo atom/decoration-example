@@ -57,5 +57,5 @@ Your package using decorations will likely need to test that the proper decorati
 [find-and-replace]:https://github.com/atom/find-and-replace
 [bookmarks]:https://github.com/atom/bookmarks
 [decoration-example-view]:https://github.com/atom/decoration-example/blob/master/lib/decoration-example-view.coffee#L40
-[stylesheet]:https://github.com/atom/decoration-example/blob/master/stylesheets/decoration-example.less
+[stylesheet]:https://github.com/atom/decoration-example/blob/master/styles/decoration-example.less
 [specs]: https://github.com/atom/decoration-example/blob/master/spec/decoration-example-spec.coffee#L33
