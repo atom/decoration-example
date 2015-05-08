@@ -55,7 +55,7 @@ class DecorationExampleView extends View
 
   updateDecoration: (decoration, newDecorationParams) ->
     # This allows you to change the class on the decoration
-    decoration.update(newDecorationParams)
+    decoration.setProperties(newDecorationParams)
 
   destroyDecorationMarker: (decoration) ->
     # Destory the decoration's marker because we will no longer need it.
