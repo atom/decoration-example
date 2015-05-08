@@ -105,7 +105,7 @@ class DecorationExampleView extends View
   ## Utility methods
 
   getEditor: ->
-    atom.workspace.getActiveEditor()
+    atom.workspace.getActiveTextEditor()
 
   getCachedDecoration: (editor, type) ->
     (@decorationsByEditorId[editor.id] ? {})[type]
