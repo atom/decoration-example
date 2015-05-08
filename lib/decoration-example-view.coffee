@@ -77,7 +77,7 @@ class DecorationExampleView extends View
       @setCachedDecoration(editor, type, decoration)
 
     @updateToggleButtonStates()
-    atom.workspaceView.focus()
+    atom.views.getView(atom.workspace).focus()
     decoration
 
   updateToggleButtonStates: ->
