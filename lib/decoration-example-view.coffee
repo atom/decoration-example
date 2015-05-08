@@ -1,4 +1,5 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
+{CompositeDisposable} = require 'atom'
 
 module.exports =
 class DecorationExampleView extends View
@@ -22,20 +23,22 @@ class DecorationExampleView extends View
 
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
+    disposables = new CompositeDisposable
+    
     @toggleButtons =
-      line: @lineToggle
-      gutter: @gutterToggle
-      highlight: @highlightToggle
+      'line': @lineToggle
+      'line-number': @gutterToggle
+      'highlight': @highlightToggle
 
     @lineToggle.on 'click', => @toggleDecorationForCurrentSelection('line')
-    @gutterToggle.on 'click', => @toggleDecorationForCurrentSelection('gutter')
+    @gutterToggle.on 'click', => @toggleDecorationForCurrentSelection('line-number')
     @highlightToggle.on 'click', => @toggleDecorationForCurrentSelection('highlight')
 
     @lineColorCycle.on 'click', => @cycleDecorationColor('line')
-    @gutterColorCycle.on 'click', => @cycleDecorationColor('gutter')
+    @gutterColorCycle.on 'click', => @cycleDecorationColor('line-number')
     @highlightColorCycle.on 'click', => @cycleDecorationColor('highlight')
 
-    atom.workspaceView.on 'pane-container:active-pane-item-changed', => @updateToggleButtonStates()
+    disposables.add atom.workspace.onDidChangeActivePaneItem => @updateToggleButtonStates()
 
   ## Decoration API methods
 
@@ -52,7 +55,7 @@ class DecorationExampleView extends View
 
   updateDecoration: (decoration, newDecorationParams) ->
     # This allows you to change the class on the decoration
-    decoration.update(newDecorationParams)
+    decoration.setProperties(newDecorationParams)
 
   destroyDecorationMarker: (decoration) ->
     # Destory the decoration's marker because we will no longer need it.
@@ -74,7 +77,7 @@ class DecorationExampleView extends View
       @setCachedDecoration(editor, type, decoration)
 
     @updateToggleButtonStates()
-    atom.workspaceView.focus()
+    atom.views.getView(atom.workspace).focus()
     decoration
 
   updateToggleButtonStates: ->
@@ -95,7 +98,7 @@ class DecorationExampleView extends View
     decoration = @getCachedDecoration(editor, type)
     decoration ?= @toggleDecorationForCurrentSelection(type)
 
-    klass = decoration.getParams().class
+    klass = decoration.getProperties().class
     currentColor = klass.replace("#{type}-", '')
     newColor = @colors[(@colors.indexOf(currentColor) + 1) % @colors.length]
     klass = "#{type}-#{newColor}"
@@ -105,7 +108,7 @@ class DecorationExampleView extends View
   ## Utility methods
 
   getEditor: ->
-    atom.workspace.getActiveEditor()
+    atom.workspace.getActiveTextEditor()
 
   getCachedDecoration: (editor, type) ->
     (@decorationsByEditorId[editor.id] ? {})[type]
@@ -121,7 +124,7 @@ class DecorationExampleView extends View
       @colors[0]
 
   attach: ->
-    atom.workspaceView.prependToBottom(this)
+    atom.workspace.addBottomPanel(item: this)
 
   # Tear down any state and detach
   destroy: ->
