@@ -98,7 +98,7 @@ class DecorationExampleView extends View
     decoration = @getCachedDecoration(editor, type)
     decoration ?= @toggleDecorationForCurrentSelection(type)
 
-    klass = decoration.getParams().class
+    klass = decoration.getProperties().class
     currentColor = klass.replace("#{type}-", '')
     newColor = @colors[(@colors.indexOf(currentColor) + 1) % @colors.length]
     klass = "#{type}-#{newColor}"
