@@ -8,5 +8,7 @@
   "engines": {
     "atom": ">0.109.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "atom-space-pen-views": "^2.0.3"
+  }
 }

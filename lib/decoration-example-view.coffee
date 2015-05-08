@@ -1,4 +1,4 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
 
 module.exports =
 class DecorationExampleView extends View
@@ -121,7 +121,7 @@ class DecorationExampleView extends View
       @colors[0]
 
   attach: ->
-    atom.workspaceView.prependToBottom(this)
+    atom.workspace.addBottomPanel(item: this)
 
   # Tear down any state and detach
   destroy: ->
