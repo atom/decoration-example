@@ -27,7 +27,7 @@ editor.decorateMarker(marker, type: 'line', class: "my-line-class")
 You can change the class on a decoration if you like:
 
 ```coffee
-decoration.update(type: 'line', class: 'some-other-class')
+decoration.setProperties(type: 'line', class: 'some-other-class')
 ```
 
 ### Destroying a decoration
