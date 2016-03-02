@@ -18,17 +18,21 @@ class DecorationExampleView extends View
           @button outlet: 'highlightToggle', class: 'btn', 'Toggle Highlight Decoration'
           @button outlet: 'highlightColorCycle', class: 'btn', 'Cycle Highlight Color'
 
+        @div class: 'btn-group', =>
+          @button outlet: 'overlayToggle', class: 'btn', 'Toggle Overlay Decoration'
+
   colors: ['green', 'blue', 'red']
   randomizeColors: true
 
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
     disposables = new CompositeDisposable
-    
+
     @toggleButtons =
-      'line': @lineToggle
-      'line-number': @gutterToggle
-      'highlight': @highlightToggle
+      line: @lineToggle
+      gutter: @gutterToggle
+      overlay: @overlayToggle
+      highlight: @highlightToggle
 
     @lineToggle.on 'click', => @toggleDecorationForCurrentSelection('line')
     @gutterToggle.on 'click', => @toggleDecorationForCurrentSelection('line-number')
@@ -37,6 +41,34 @@ class DecorationExampleView extends View
     @lineColorCycle.on 'click', => @cycleDecorationColor('line')
     @gutterColorCycle.on 'click', => @cycleDecorationColor('line-number')
     @highlightColorCycle.on 'click', => @cycleDecorationColor('highlight')
+
+    @overlayToggle.on 'click', =>
+      return unless editor = @getEditor()
+
+      type = 'overlay'
+
+      decoration = @getCachedDecoration(editor, type)
+      if decoration?
+        decoration.destroy()
+        @setCachedDecoration(editor, type, null)
+      else
+        position = editor.getCursorBufferPosition()
+        range = [position, position]
+
+        item = document.createElement('div')
+        item.classList.add 'overlay-example'
+        item.classList.add 'popover-list'
+
+        # marker = editor.markBufferRange(range, invalidate: 'never')
+        marker = editor.getLastCursor().marker
+
+        # create a decoration that follows the marker. A Decoration object is returned which can be updated
+        decoration = editor.decorateMarker(marker, {type, item})
+
+        @setCachedDecoration(editor, type, decoration)
+
+      @updateToggleButtonStates()
+      atom.workspaceView.focus()
 
     disposables.add atom.workspace.onDidChangeActivePaneItem => @updateToggleButtonStates()
 
