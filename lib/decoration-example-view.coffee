@@ -1,5 +1,6 @@
 {View} = require 'atom-space-pen-views'
 {CompositeDisposable} = require 'atom'
+EventsManager = require './events-manager'
 
 module.exports =
 class DecorationExampleView extends View
@@ -27,6 +28,7 @@ class DecorationExampleView extends View
   initialize: (serializeState) ->
     @decorationsByEditorId = {}
     disposables = new CompositeDisposable
+    @eventsManager = new EventsManager
 
     @toggleButtons =
       line: @lineToggle
@@ -83,6 +85,7 @@ class DecorationExampleView extends View
 
     # create a decoration that follows the marker. A Decoration object is returned which can be updated
     decoration = editor.decorateMarker(marker, type: type, class: "#{type}-#{@getRandomColor()}")
+    @eventsManager.doDecoration(decoration)
     decoration
 
   updateDecoration: (decoration, newDecorationParams) ->
