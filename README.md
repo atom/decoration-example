@@ -1,4 +1,5 @@
-# Decoration Example
+##### Atom and all repositories under Atom will be archived on December 15, 2022. Learn more in our [official announcement](https://github.blog/2022-06-08-sunsetting-atom/)
+ # Decoration Example
 
 This will show you all the capabilities of Atom's Decoration API. When enabled, this package adds a panel of buttons that exercise the API.
 
